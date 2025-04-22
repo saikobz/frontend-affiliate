@@ -4,8 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE } from '../utils/config';
 
-const API_BASE = process.env.REACT_APP_API_URL;
-
 const PackageList = () => {
     const [packages, setPackages] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
