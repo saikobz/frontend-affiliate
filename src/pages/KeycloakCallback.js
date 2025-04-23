@@ -14,18 +14,17 @@ function KeycloakCallback() {
 
         if (error) {
             console.error("เกิดข้อผิดพลาด:", params.get("error_description"));
+            alert("เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
+            navigate("/login"); // redirect ไปหน้า login เมื่อเกิดข้อผิดพลาด
         }
 
         if (token) {
             localStorage.setItem('access_token', token);
-            // ✅ แจ้งเตือน login สำเร็จ
             alert("🎉 เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับ");
-            navigate('/');
+            navigate('/packages'); // หรือหน้าอื่นๆ ที่ต้องการ
         } else {
-            // fallback: reload ถ้าไม่มี token
-            setTimeout(() => {
-                window.location.reload();
-            }, 500);
+            alert("ไม่พบ token");
+            navigate("/login"); // redirect ไปหน้า login หากไม่มี token
         }
     }, [navigate]);
 
