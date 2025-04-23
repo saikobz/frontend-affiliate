@@ -7,7 +7,7 @@ import { KEYCLOAK_BASE, REDIRECT_URI } from '../utils/config';
 function Home() {
     const navigate = useNavigate();
 
-    const keycloakRegisterUrl = `${KEYCLOAK_BASE}/protocol/openid-connect/registrations?client_id=affiliator-client&response_type=token&scope=openid&redirect_uri=${REDIRECT_URI}`;
+    const keycloakRegisterUrl = `https://keycloak-deploy-1.onrender.com/realms/affiliate-realm/protocol/openid-connect/auth?client_id=affiliator-client&response_type=code&scope=openid&redirect_uri=https://frontend-affiliate-chi.vercel.app/callback`;
 
     const handleClickViewPackages = () => {
         navigate("/packages"); // ✅ ไม่มี log homepage-entry อีกแล้ว
