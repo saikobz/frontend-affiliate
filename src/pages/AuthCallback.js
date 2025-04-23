@@ -13,7 +13,7 @@ const AuthCallback = () => {
         const code = query.get("code");
 
         if (!code) {
-            navigate("/packages");
+            navigate("/login"); // redirect ไปหน้า login หากไม่พบ code
             return;
         }
 
@@ -22,7 +22,6 @@ const AuthCallback = () => {
         data.append("code", code);
         data.append("redirect_uri", REDIRECT_URI);
         data.append("client_id", "affiliator-client");
-        // ถ้ามี client_secret → data.append("client_secret", "...secret...");
 
         fetch(`${KEYCLOAK_BASE}/protocol/openid-connect/token`, {
             method: "POST",
@@ -38,16 +37,17 @@ const AuthCallback = () => {
                     navigate("/packages");
                 } else {
                     console.error("ไม่สามารถแลก token ได้", token);
-                    navigate("/packages");
+                    navigate("/login"); // redirect ไปหน้า login หากแลก token ไม่ได้
                 }
             })
             .catch((err) => {
                 console.error("เกิดข้อผิดพลาดขณะแลก token:", err);
-                navigate("/packages");
+                navigate("/login"); // redirect ไปหน้า login หากมีข้อผิดพลาด
             });
     }, [location.search, navigate]);
 
     return <div className="text-center mt-5">🔄 กำลังเข้าสู่ระบบ...</div>;
 };
+
 
 export default AuthCallback;
