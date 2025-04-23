@@ -3,8 +3,9 @@
 import React from 'react';
 
 const Register = () => {
-    const keycloakRegisterUrl =
-        "https://keycloak-deploy.onrender.com/realms/affiliate-realm/protocol/openid-connect/registrations?client_id=affiliator-client&response_type=token&scope=openid&redirect_uri=https://frontend-affiliate.vercel.app/callback";
+    const keycloakLoginUrl =
+        "https://keycloak-deploy.onrender.com/realms/affiliate-realm/protocol/openid-connect/auth?client_id=affiliator-client&response_type=code&scope=openid&redirect_uri=https://frontend-affiliate.vercel.app/callback";
+
 
     return (
         <div className="container mt-5">
