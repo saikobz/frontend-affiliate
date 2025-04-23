@@ -33,7 +33,7 @@ const Navbar = () => {
         window.location.href = "/";
     };
 
-    const loginUrl = `${KEYCLOAK_BASE}/protocol/openid-connect/auth?client_id=affiliator-client&response_type=token&prompt=login&redirect_uri=${REDIRECT_URI}`;
+    const loginUrl = "https://keycloak-deploy-1.onrender.com/realms/affiliate-realm/protocol/openid-connect/auth?client_id=affiliator-client&response_type=code&scope=openid&redirect_uri=https://frontend-affiliate-chi.vercel.app/callback";
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4">
