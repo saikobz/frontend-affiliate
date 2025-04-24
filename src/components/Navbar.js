@@ -8,6 +8,26 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate(); // Used for navigation
 
+    const isTokenExpired = (token) => {
+        try {
+            const decoded = jwtDecode(token);
+            const exp = decoded.exp * 1000; // ค่าหมดอายุของ token
+            return Date.now() > exp; // ถ้าหมดอายุแล้ว
+        } catch (error) {
+            console.error("Error decoding token:", error);
+            return true; // ถ้า decode ไม่ได้, ถือว่า token หมดอายุ
+        }
+    };
+
+    const token = localStorage.getItem("access_token");
+    if (token && isTokenExpired(token)) {
+        alert("Token expired, please login again.");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        navigate("/login");
+    }
+
+
     useEffect(() => {
         const token = localStorage.getItem("access_token");
         if (token) {
