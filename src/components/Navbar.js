@@ -47,10 +47,9 @@ const Navbar = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("access_token");
-        localStorage.removeItem("id_token");
-        setUsername(null); // Reset username state
-        navigate("/login"); // Use navigate to go to login page
-    };
+        localStorage.removeItem("refresh_token");
+        navigate("/login");
+    };    
 
     const loginUrl = `https://keycloak-deploy-1.onrender.com/realms/affiliate-realm/protocol/openid-connect/auth?client_id=affiliator-client&response_type=code&scope=openid&redirect_uri=https://frontend-affiliate-chi.vercel.app/callback`;
 
