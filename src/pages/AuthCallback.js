@@ -23,7 +23,7 @@ const AuthCallback = () => {
         data.append("redirect_uri", REDIRECT_URI);
         data.append("client_id", "affiliator-client");
 
-        fetch(`${KEYCLOAK_BASE}/protocol/openid-connect/token`, {
+        fetch(`${KEYCLOAK_BASE}/realms/affiliate-realm/protocol/openid-connect/token`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
