@@ -3,8 +3,8 @@
 import React from 'react';
 
 const Register = () => {
-    const keycloakRegisterUrl =
-        "https://keycloak-deploy-1.onrender.com/realms/affiliate-realm/account/#/register";
+    const keycloakRegisterUrl = 
+    "https://keycloak-deploy-1.onrender.com/realms/affiliate-realm/protocol/openid-connect/registrations?client_id=affiliator-client&response_type=code&scope=openid&redirect_uri=https://frontend-affiliate-chi.vercel.app/callback";
 
     return (
         <div className="container mt-5">
@@ -12,7 +12,7 @@ const Register = () => {
                 <h2 className="mb-4">📝 สมัครเป็น Affiliator</h2>
                 <p className="text-muted">ลงทะเบียนเพื่อเริ่มต้นโปรโมตแพ็กเกจท่องเที่ยวและรับค่าคอมมิชชั่น</p>
                 <a href={keycloakRegisterUrl} className="btn btn-lg btn-success mt-3">
-                    ➕ สมัครสมาชิกผ่าน Keycloaks
+                    ➕ สมัครสมาชิกผ่าน Keycloak
                 </a>
             </div>
         </div>
