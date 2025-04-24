@@ -1,13 +1,12 @@
-// Navbar.js - รีเฟรชชื่อผู้ใช้แบบ Reactive เมื่อ login/logout
-
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { KEYCLOAK_BASE, REDIRECT_URI } from '../utils/config';
 
 const Navbar = () => {
     const [username, setUsername] = useState(null);
-    const location = useLocation(); // ✅ ตรวจ path เปลี่ยนเพื่อ refresh token
+    const location = useLocation();
+    const navigate = useNavigate(); // Used for navigation
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
@@ -24,16 +23,16 @@ const Navbar = () => {
         } else {
             setUsername(null);
         }
-    }, [location]); // ✅ ทุกครั้งที่ path เปลี่ยน ให้เช็ค token ใหม่
+    }, [location]); // Re-check token whenever path changes
 
     const handleLogout = () => {
         localStorage.removeItem("access_token");
         localStorage.removeItem("id_token");
-        setUsername(null); // ✅ reset username
-        window.location.href = "/";
+        setUsername(null); // Reset username state
+        navigate("/login"); // Use navigate to go to login page
     };
 
-    const loginUrl = "https://keycloak-deploy-1.onrender.com/realms/affiliate-realm/protocol/openid-connect/auth?client_id=affiliator-client&response_type=code&scope=openid&redirect_uri=https://frontend-affiliate-chi.vercel.app/callback";
+    const loginUrl = `${KEYCLOAK_BASE}/protocol/openid-connect/auth?client_id=affiliator-client&response_type=code&scope=openid&redirect_uri=${REDIRECT_URI}`;
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4">
