@@ -6,8 +6,9 @@ import { KEYCLOAK_BASE, REDIRECT_URI } from '../utils/config';
 const Navbar = () => {
     const [username, setUsername] = useState(null);
     const location = useLocation();
-    const navigate = useNavigate(); // Used for navigation
+    const navigate = useNavigate(); // ใช้สำหรับการเปลี่ยนเส้นทาง
 
+    // ฟังก์ชันเช็คว่า token หมดอายุหรือไม่
     const isTokenExpired = (token) => {
         try {
             const decoded = jwtDecode(token);
@@ -19,39 +20,68 @@ const Navbar = () => {
         }
     };
 
-    const token = localStorage.getItem("access_token");
-    if (token && isTokenExpired(token)) {
-        alert("Token expired, please login again.");
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        navigate("/login");
-    }
+    // ฟังก์ชันรีเฟรช token
+    const refreshToken = () => {
+        const refreshToken = localStorage.getItem("refresh_token");
+        if (!refreshToken) {
+            alert("Refresh token not found. Please login again.");
+            navigate("/login");
+            return;
+        }
 
+        const data = new URLSearchParams();
+        data.append("grant_type", "refresh_token");
+        data.append("refresh_token", refreshToken);
+        data.append("client_id", "affiliator-client");
+        data.append("redirect_uri", REDIRECT_URI);
+
+        fetch(`${KEYCLOAK_BASE}/protocol/openid-connect/token`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: data,
+        })
+        .then((res) => res.json())
+        .then((token) => {
+            if (token.access_token) {
+                localStorage.setItem("access_token", token.access_token);
+                localStorage.setItem("refresh_token", token.refresh_token); // ถ้ามี refresh token ให้เก็บ
+                navigate("/packages"); // หรือหน้าอื่นๆ ที่ต้องการ
+            } else {
+                console.error("Failed to refresh token:", token);
+                navigate("/login");
+            }
+        })
+        .catch((err) => {
+            console.error("Error refreshing token:", err);
+            navigate("/login");
+        });
+    };
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                const rawUsername = decoded.preferred_username || decoded.name || "ผู้ใช้";
-                const onlyUsername = rawUsername.includes("@") ? rawUsername.split("@")[0] : rawUsername;
-                setUsername(onlyUsername);
-            } catch (error) {
-                console.error("ไม่สามารถ decode token ได้:", error);
-                setUsername(null);
-            }
+
+        if (token && isTokenExpired(token)) {
+            // รีเฟรช token ถ้ามันหมดอายุ
+            refreshToken();
+        } else if (token) {
+            const decoded = jwtDecode(token);
+            const username = decoded.preferred_username || decoded.name || "ผู้ใช้";
+            setUsername(username); // ตั้งชื่อผู้ใช้
         } else {
-            setUsername(null);
+            setUsername(null); // ไม่มี token, รีเซ็ตชื่อผู้ใช้
         }
-    }, [location]); // Re-check token whenever path changes
+    }, [location]); // ทุกครั้งที่ path เปลี่ยน ให้เช็ค token ใหม่
 
     const handleLogout = () => {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
+        setUsername(null);
         navigate("/login");
-    };    
+    };
 
-    const loginUrl = `https://keycloak-deploy-1.onrender.com/realms/affiliate-realm/protocol/openid-connect/auth?client_id=affiliator-client&response_type=code&scope=openid&redirect_uri=https://frontend-affiliate-chi.vercel.app/callback`;
+    const loginUrl = `${KEYCLOAK_BASE}/protocol/openid-connect/auth?client_id=affiliator-client&response_type=code&scope=openid&redirect_uri=${REDIRECT_URI}`;
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4">
