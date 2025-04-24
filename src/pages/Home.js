@@ -17,7 +17,7 @@ function Home() {
         <>
             <section className="bg-light py-5">
                 <div className="container text-center">
-                    <h1 className="fw-bold mb-3">สมัครเป็นพาร์ทเนอร์กับเราk</h1>
+                    <h1 className="fw-bold mb-3">สมัครเป็นพาร์ทเนอร์กับเรา</h1>
                     <p className="text-muted mb-4">
                         เข้าร่วมโปรแกรม Affiliate เพื่อโปรโมตแพ็กเกจท่องเที่ยว และรับค่าคอมมิชชั่นจากทุกการจองผ่านเว็บไซต์ของคุณ
                     </p>
